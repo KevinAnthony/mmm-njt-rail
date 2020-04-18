@@ -1,0 +1,24 @@
+{
+  "name": "mmm-njt-rail",
+  "version": "1.0.0",
+  "description": "Magic Mirror Module for New Jersey Transit Rail Lines",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KevinAnthony/mmm-njt-rail.git"
+  },
+  "author": "Kevin Anthony",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KevinAnthony/mmm-njt-rail/issues"
+  },
+  "homepage": "https://github.com/KevinAnthony/mmm-njt-rail#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "cheerio-tableparser": "^1.0.1",
+    "needle": "^2.4.1"
+  }
+}
