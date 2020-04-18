@@ -1,0 +1,40 @@
+/* A MagicMirror module
+ * Copyright (C) 2018 Dmitry Studynskyi
+ * License: GNU General Public License */
+
+.njtr_table {
+    table-layout: fixed;
+    white-space: nowrap;
+    border-collapse: collapse;
+}
+
+.njtr_row {
+    text-align: middle;
+    vertical-align: middle;
+    padding-bottom: 5px;
+}
+
+.njtr_time {
+    width: 3em;
+    height: 1em;
+}
+
+.njtr_dest {
+    width: 12em;
+    height: 1em;
+}
+
+.njtr_track {
+    width: 2em;
+    height: 1em;
+}
+
+.njtr_line {
+    width: 10em;
+    height: 1em;
+}
+
+.njtr_status {
+    width: 6em;
+    height: 1em;
+}
