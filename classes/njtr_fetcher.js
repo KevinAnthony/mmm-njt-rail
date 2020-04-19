@@ -61,7 +61,6 @@ class NJTRFetcher {
         table[5].shift()
 
         // all even numbers 0,2,4,... are blank, so we skip them
-
         for (var i = 1; i < table[0].length; i += 2) {
             sched.push({
                 time: table[0][i],
