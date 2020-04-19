@@ -42,14 +42,14 @@ class NJTRFetcher {
                 console.error(`NJ Transit error querying NJ Transit API for stop id: ${this.stationID}`);
                 console.error(err);
             }).finally(
-                // () => this.start()
+                () => this.start()
             );
     }
 
     parseResponse($) {
         var sched = []
         var table = $.parsetable(false, false, true)
-        if (table.length === 0 || table[0].length === 0 ){
+        if (table.length === 0 || table[0].length === 0) {
             return sched;
         }
         //shift to remove heading
@@ -61,7 +61,6 @@ class NJTRFetcher {
         table[5].shift()
 
         // all even numbers 0,2,4,... are blank, so we skip them
-        
         for (var i = 1; i < table[0].length; i += 2) {
             sched.push({
                 time: table[0][i],
