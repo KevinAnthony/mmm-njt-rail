@@ -3,6 +3,7 @@ Module.register("MMM-NJT-Rail", {
     station: 'NY',
     fadePoint: .25,
     maxShown: 0,
+    refreshIntervale: 60,
   },
   start: function () {
     Log.log(`Starting module: ${this.name}`);
@@ -37,6 +38,7 @@ Module.register("MMM-NJT-Rail", {
         this.sendSocketNotification("INIT_NJT", {
           station: this.config.station,
           max: this.config.maxShown,
+          refresh: this.config.refreshIntervale * 1000,
         })
         break
     }
