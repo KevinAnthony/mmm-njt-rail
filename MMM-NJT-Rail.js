@@ -34,17 +34,18 @@ Module.register("MMM-NJT-Rail", {
   getTranslations() {
     return false;
   },
-  // notificationReceived: function (notification) {
-  //   switch (notification) {
-  //     case "DOM_OBJECTS_CREATED":
-  //       this.sendSocketNotification("INIT_NJT", {
-  //         station: this.config.station,
-  //         max: this.config.maxShown,
-  //         refresh: this.config.refreshInterval * 1000,
-  //       })
-  //       break
-  //   }
-  // },
+  notificationReceived: function (notification, payload, sender) {
+    Log.log("Got Notification "+ sender + payload)
+    switch (notification) {
+      case "DOM_OBJECTS_CREATED":
+        this.sendSocketNotification("INIT_NJT", {
+          station: this.config.station,
+          max: this.config.maxShown,
+          refresh: this.config.refreshInterval * 1000,
+        })
+        break
+    }
+  },
   socketNotificationReceived: function (notification, payload) {
     Log.log(notification)
     Log.log(payload)
