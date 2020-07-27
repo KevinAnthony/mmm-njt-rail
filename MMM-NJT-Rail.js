@@ -1,3 +1,5 @@
+/* eslint-disable no-undef,guard-for-in,no-restricted-syntax */
+// eslint-disable-next-line no-undef
 Module.register("MMM-NJT-Rail", {
   defaults: {
     station: 'NY',
@@ -32,17 +34,17 @@ Module.register("MMM-NJT-Rail", {
   getTranslations() {
     return false;
   },
-  notificationReceived: function (notification, payload, sender) {
-    switch (notification) {
-      case "DOM_OBJECTS_CREATED":
-        this.sendSocketNotification("INIT_NJT", {
-          station: this.config.station,
-          max: this.config.maxShown,
-          refresh: this.config.refreshInterval * 1000,
-        })
-        break
-    }
-  },
+  // notificationReceived: function (notification) {
+  //   switch (notification) {
+  //     case "DOM_OBJECTS_CREATED":
+  //       this.sendSocketNotification("INIT_NJT", {
+  //         station: this.config.station,
+  //         max: this.config.maxShown,
+  //         refresh: this.config.refreshInterval * 1000,
+  //       })
+  //       break
+  //   }
+  // },
   socketNotificationReceived: function (notification, payload) {
     Log.log(notification)
     Log.log(payload)
@@ -51,12 +53,12 @@ Module.register("MMM-NJT-Rail", {
         if (this.config.fadePoint < 0) {
           this.config.fadePoint = 0;
         }
-        const startingPoint = payload.length * this.config.fadePoint;
-        const steps = payload.length - startingPoint;
+        var startingPoint = payload.length * this.config.fadePoint;
+        var steps = payload.length - startingPoint;
 
-        let tbl = document.getElementById("station_table")
+        var tbl = document.getElementById("station_table")
         tbl.className = "small";
-        let tblBody = document.createElement("tbody");
+        var tblBody = document.createElement("tbody");
         tblBody.className = "njtr_table"
         if (payload.length === 0) {
           tbl.innerHTML = "No Trains Scheduled"
