@@ -1,6 +1,6 @@
 const needle = require("needle");
 const cheerio = require("cheerio");
-const cheerioTableparser = require('cheerio-tableparser');
+const cheerioTableParser = require('cheerio-tableparser');
 
 
 class NJTRFetcher {
@@ -30,12 +30,12 @@ class NJTRFetcher {
         const apiUrl = `https://dv.njtransit.com/webdisplay/tid-mobile.aspx?sid=${this.stationID}`;
         await needle('get', apiUrl)
             .then(async (res) => {
-                var $ = cheerio.load(res.body);
-                cheerioTableparser($);
+                let $ = cheerio.load(res.body);
+                cheerioTableParser($);
                 // parse
-                var schedual = this.parseResponse($("#GridView1"))
+                let schedule = this.parseResponse($("#GridView1"))
                 // broadcast
-                this.eventsReceivedCallback(schedual)
+                this.eventsReceivedCallback(schedule)
 
             }).catch((err) => {
                 /* handle HTTP errors */
@@ -47,10 +47,10 @@ class NJTRFetcher {
     }
 
     parseResponse($) {
-        var sched = []
-        var table = $.parsetable(false, false, true)
+        let schedules = []
+        let table = $.parsetable(false, false, true)
         if (table.length === 0 || table[0].length === 0) {
-            return sched;
+            return schedules;
         }
         //shift to remove heading
         table[0].shift()
@@ -61,8 +61,8 @@ class NJTRFetcher {
         table[5].shift()
 
         // all even numbers 0,2,4,... are blank, so we skip them
-        for (var i = 1; i < table[0].length; i += 2) {
-            sched.push({
+        for (let i = 1; i < table[0].length; i += 2) {
+            schedules.push({
                 time: table[0][i],
                 dest: table[1][i],
                 track: table[2][i],
@@ -70,12 +70,12 @@ class NJTRFetcher {
                 trainNum: table[4][i],
                 status: table[5][i]
             })
-            if (this.max > 0 && sched.length >= this.max) {
+            if (this.max > 0 && schedules.length >= this.max) {
                 break
             }
         }
 
-        return sched
+        return schedules
     }
 }
 

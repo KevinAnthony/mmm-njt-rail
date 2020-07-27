@@ -20,5 +20,8 @@
     "cheerio": "^1.0.0-rc.3",
     "cheerio-tableparser": "^1.0.1",
     "needle": "^2.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0"
   }
 }
