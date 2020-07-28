@@ -105,7 +105,6 @@ Module.register("MMM-NJT-Rail", {
           tbl.innerHTML = '';
           tbl.appendChild(tblBody)
         })
-
         break
     }
   },
