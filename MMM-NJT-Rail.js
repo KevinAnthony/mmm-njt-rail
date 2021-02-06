@@ -16,9 +16,8 @@ Module.register("MMM-NJT-Rail", {
     wrapper.id = "wrapper"
     let t = document.createElement("table");
     t.id = "station_table"
-    t.className = "fa njtr_table"
+    t.className = "normal fa-sm njtr_table"
     t.innerText = "loading..."
-    //TODO create header
 
     wrapper.append(t)
     return wrapper
@@ -63,36 +62,37 @@ Module.register("MMM-NJT-Rail", {
         tblBody.className = "njtr_table"
         if (payload.length === 0) {
           tbl.innerHTML = "No Trains Scheduled"
+          tbl.className = "normal fa-sm"
           break;
         }
 
         payload.forEach(function (train, i) {
           let row = document.createElement("tr")
-          row.className = "fa-sm njtr_row";
+          row.className = "normal fa-sm njtr_row";
 
           let timeCell = document.createElement("td");
           timeCell.innerText = train.time;
-          timeCell.className = "fa-sm njtr_row njtr_time";
+          timeCell.className = "normal fa-sm njtr_row njtr_time";
           row.appendChild(timeCell);
 
           let destCell = document.createElement("td");
           destCell.innerText = train.dest;
-          destCell.className = "fa-sm  njtr_row njtr_dest";
+          destCell.className = "normal fa-sm njtr_row njtr_dest";
           row.appendChild(destCell);
 
           let trackCell = document.createElement("td");
           trackCell.innerText = train.track;
-          trackCell.className = "fa-sm njtr_row njtr_track";
+          trackCell.className = "normal fa-sm njtr_row njtr_track";
           row.appendChild(trackCell);
 
           let lineCell = document.createElement("td");
           lineCell.innerText = train.line;
-          lineCell.className = "fa-sm njtr_row njtr_line";
+          lineCell.className = "normal fa-sm njtr_row njtr_line";
           row.appendChild(lineCell);
 
           let statusCell = document.createElement("td");
           statusCell.innerText = train.status;
-          statusCell.className = "fa-sm njtr_row njtr_status";
+          statusCell.className = "normal fa-sm njtr_row njtr_status";
           row.appendChild(statusCell);
 
           tblBody.appendChild(row);

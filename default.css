@@ -1,7 +1,3 @@
-/* A MagicMirror module
- * Copyright (C) 2018 Dmitry Studynskyi
- * License: GNU General Public License */
-
 .njtr_table {
     table-layout: fixed;
     white-space: nowrap;
@@ -15,7 +11,7 @@
 }
 
 .njtr_time {
-    width: 3em;
+    width: 4em;
     height: 1em;
 }
 
