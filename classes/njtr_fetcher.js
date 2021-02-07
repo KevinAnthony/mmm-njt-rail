@@ -1,7 +1,4 @@
-const needle = require("needle");
-const cheerio = require("cheerio");
-const cheerioTableParser = require('cheerio-tableparser');
-
+let axios = require('axios');
 
 class NJTRFetcher {
     constructor(stationID, fetchInterval, max) {
@@ -9,6 +6,10 @@ class NJTRFetcher {
         this.fetchInterval = fetchInterval;
         this.max = max
         this.reloadTimer = null;
+
+        this.token = 'fSJeKkBzVHpWdFEkcWoiOiJzc2FwIiwiZyFuem8mOWxRWXg3IjoicmVzdSJ7'
+        this.hash = '988af61d40d8f98ad68e0793b81a9a04bb96efa8407004a0ef85ec477cf00025'
+
     }
 
     onReceive(callback) {
@@ -16,6 +17,7 @@ class NJTRFetcher {
     }
 
     start() {
+        this.fetch()
         clearTimeout(this.reloadTimer);
         this.reloadTimer = setTimeout(() => this.fetch(), this.fetchInterval);
     }
@@ -25,58 +27,64 @@ class NJTRFetcher {
         this.reloadTimer = null;
     }
 
+    fixUnicode(inText) {
+        let matches = inText.matchAll("&#([0-9]+)")
+
+        for (const match of matches) {
+           inText = inText.replace(match[0], String.fromCharCode(parseInt(match[1])))
+        }
+
+        return inText
+    }
+
     async fetch() {
         this.stop()
-        const apiUrl = `https://dv.njtransit.com/webdisplay/tid-mobile.aspx?sid=${this.stationID}`;
-        await needle('get', apiUrl)
-            .then(async (res) => {
-                let $ = cheerio.load(res.body);
-                cheerioTableParser($);
-                // parse
-                let schedule = this.parseResponse($("#GridView1"))
-                // broadcast
-                this.eventsReceivedCallback(schedule)
-
-            }).catch((err) => {
-                /* handle HTTP errors */
-                console.error(`NJ Transit error querying NJ Transit API for stop id: ${this.stationID}`);
-                console.error(err);
-            }).finally(
-                () => this.start()
-            );
-    }
-
-    parseResponse($) {
-        let schedules = []
-        let table = $.parsetable(false, false, true)
-        if (table.length === 0 || table[0].length === 0) {
-            return schedules;
-        }
-        //shift to remove heading
-        table[0].shift()
-        table[1].shift()
-        table[2].shift()
-        table[3].shift()
-        table[4].shift()
-        table[5].shift()
-
-        // all even numbers 0,2,4,... are blank, so we skip them
-        for (let i = 1; i < table[0].length; i += 2) {
-            schedules.push({
-                time: table[0][i],
-                dest: table[1][i],
-                track: table[2][i],
-                line: table[3][i],
-                trainNum: table[4][i],
-                status: table[5][i]
-            })
-            if (this.max > 0 && schedules.length >= this.max) {
-                break
+        var data = JSON.stringify({
+            "operationName": "TrainDepartureScreens",
+            "variables": {"station": this.stationID},
+            "extensions": {
+                "persistedQuery": {
+                    "version": 1,
+                    "sha256Hash": this.hash
+                }
             }
-        }
+        });
 
-        return schedules
+        var config = {
+            method: 'post',
+            url: 'https://api.njtransit.com/graphql',
+            headers: {
+                'authorization': 'Bearer '+ this.token,
+                'content-type': 'application/json',
+            },
+            data: data
+        };
+
+        let self = this;
+        axios(config).then(function (response) {
+            let schedules = []
+
+            response.data.data.getTrainDepartureScreens.items.some(el =>{
+                schedules.push({
+                    time: self.fixUnicode(el.departureDate),
+                    dest: self.fixUnicode(el.destination),
+                    track: self.fixUnicode(el.track),
+                    line: self.fixUnicode(el.line),
+                    trainNum: self.fixUnicode(el.trainID),
+                    status: self.fixUnicode(el.status)
+                })
+                return self.max > 0 && schedules.length >= self.max
+            })
+            self.eventsReceivedCallback(schedules);
+        }).catch((err) => {
+            /* handle HTTP errors */
+            console.error(`NJ Transit error querying NJ Transit API for stop id: ${this.stationID}`);
+            console.error(err);
+        }).finally(
+            () => this.start()
+        );
     }
 }
+
 
 module.exports = NJTRFetcher;
