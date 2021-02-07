@@ -8,21 +8,18 @@ Module.register("MMM-NJT-Rail", {
     refreshInterval: 60,
   },
   start: function () {
+    console.log = Log.log
+    console.error = Log.error
     Log.log(`Starting module: ${this.name}`);
   },
   getDom: function () {
     let wrapper = document.createElement("div")
     wrapper.className = "BaseWrapper"
     wrapper.id = "wrapper"
-
     let t = document.createElement("table");
     t.id = "station_table"
-    t.className = "small";
-    t.innerHTML = "loading..."
-    t.className = "normal fa-sm"
-
-    var tblBody = document.createElement("tbody");
-    tblBody.className = "njtr_table"
+    t.className = "normal fa-sm njtr_table"
+    t.innerText = "loading..."
 
     wrapper.append(t)
     return wrapper
@@ -40,7 +37,6 @@ Module.register("MMM-NJT-Rail", {
   },
   notificationReceived: function (notification, payload, sender) {
     switch (notification) {
-      case "DOM_OBJECTS_CREATED":
         this.sendSocketNotification("INIT_NJT", {
           station: this.config.station,
           max: this.config.maxShown,
@@ -70,34 +66,19 @@ Module.register("MMM-NJT-Rail", {
           break;
         }
 
+        this.insertHeader(tblBody)
+
+         var createCell = this.createCell
+
         payload.forEach(function (train, i) {
           let row = document.createElement("tr")
-          row.className = "normal fa-sm njtr_row";
+          row.className = "normal fa-sm";
 
-          let timeCell = document.createElement("td");
-          timeCell.innerText = train.time;
-          timeCell.className = "normal fa-sm njtr_row njtr_time";
-          row.appendChild(timeCell);
-
-          let destCell = document.createElement("td");
-          destCell.innerText = train.dest;
-          destCell.className = "normal fa-sm njtr_row njtr_dest";
-          row.appendChild(destCell);
-
-          let trackCell = document.createElement("td");
-          trackCell.innerText = train.track;
-          trackCell.className = "normal fa-sm njtr_row njtr_track";
-          row.appendChild(trackCell);
-
-          let lineCell = document.createElement("td");
-          lineCell.innerText = train.line;
-          lineCell.className = "normal fa-sm njtr_row njtr_line";
-          row.appendChild(lineCell);
-
-          let statusCell = document.createElement("td");
-          statusCell.innerText = train.status;
-          statusCell.className = "normal fa-sm njtr_row njtr_status";
-          row.appendChild(statusCell);
+          row.appendChild(createCell(train.time, "njtr_time"));
+          row.appendChild(createCell(train.dest, "njtr_dest"));
+          row.appendChild(createCell(train.track, "njtr_track"));
+          row.appendChild(createCell(train.line, "njtr_line"));
+          row.appendChild(createCell(train.status, "njtr_status"));
 
           tblBody.appendChild(row);
           if (i >= startingPoint) {
@@ -112,4 +93,26 @@ Module.register("MMM-NJT-Rail", {
         break
     }
   },
+  insertHeader(table) {
+    let row = document.createElement("tr")
+    row.className = "normal fa-sm";
+
+    row.appendChild(this.createCell("Time", "njtr_time"))
+    row.appendChild(this.createCell("Destination", "njtr_dest"))
+    row.appendChild(this.createCell("Track", "njtr_track"))
+    row.appendChild(this.createCell("Line", "njtr_line"))
+    row.appendChild(this.createCell("Status", "njtr_status"))
+
+    table.appendChild(row);
+
+    return table
+  },
+  createCell(text, className) {
+    let cell = document.createElement("td")
+
+    cell.innerText = text
+    cell.className = "normal fa-sm " + className
+
+    return cell
+  }
 })

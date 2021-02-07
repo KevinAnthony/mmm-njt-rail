@@ -9,17 +9,13 @@ class NJTRFetcher {
 
         this.token = 'fSJeKkBzVHpWdFEkcWoiOiJzc2FwIiwiZyFuem8mOWxRWXg3IjoicmVzdSJ7'
         this.hash = '988af61d40d8f98ad68e0793b81a9a04bb96efa8407004a0ef85ec477cf00025'
-
-        console.log("constructor")
     }
 
     onReceive(callback) {
-        console.log("onReceive")
         this.eventsReceivedCallback = callback;
     }
 
     start() {
-        console.log("here")
         this.fetch()
         clearTimeout(this.reloadTimer);
         this.reloadTimer = setTimeout(() => this.fetch(), this.fetchInterval);
@@ -67,7 +63,7 @@ class NJTRFetcher {
                     trainNum: el.trainID,
                     status: el.status
                 })
-                return that.max > 0 && schedules.length >= that.max
+               return that.max > 0 && schedules.length >= that.max
             })
             that.eventsReceivedCallback(schedules);
         }).catch((err) => {
