@@ -2,16 +2,13 @@ const nodeHelper = require("node_helper");
 const njtr = require("./classes/njtr_fetcher");
 
 module.exports = nodeHelper.create({
-  start: function () {
-
-  },
   socketNotificationReceived: function (notification, payload) {
     switch (notification) {
-      case "INIT_NJT":
+      case "NJT_INIT":
         console.log(payload)
         var fetcher = new njtr(payload.station, payload.refresh, payload.max)
         fetcher.onReceive((schedual) => {
-          this.sendSocketNotification("REFRESH", schedual);
+          this.sendSocketNotification("NJT_REFRESH", schedual);
         });
         fetcher.start()
         break

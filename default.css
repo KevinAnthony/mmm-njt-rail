@@ -4,7 +4,7 @@
     border-collapse: collapse;
 }
 
-.njtr_row {
+.njtr_row tr td th {
     text-align: middle;
     vertical-align: middle;
     padding-bottom: 5px;
@@ -21,7 +21,7 @@
 }
 
 .njtr_track {
-    width: 2em;
+    width: 3em;
     height: 1em;
 }
 

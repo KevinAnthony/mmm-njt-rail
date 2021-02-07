@@ -9,17 +9,13 @@ class NJTRFetcher {
 
         this.token = 'fSJeKkBzVHpWdFEkcWoiOiJzc2FwIiwiZyFuem8mOWxRWXg3IjoicmVzdSJ7'
         this.hash = '988af61d40d8f98ad68e0793b81a9a04bb96efa8407004a0ef85ec477cf00025'
-
-        console.log("constructor")
     }
 
     onReceive(callback) {
-        console.log("onReceive")
         this.eventsReceivedCallback = callback;
     }
 
     start() {
-        console.log("here")
         this.fetch()
         clearTimeout(this.reloadTimer);
         this.reloadTimer = setTimeout(() => this.fetch(), this.fetchInterval);
@@ -32,7 +28,7 @@ class NJTRFetcher {
 
     async fetch() {
         this.stop()
-        Log.log("NJT_INIT")
+        console.log("NJT_INIT")
         var data = JSON.stringify({
             "operationName": "TrainDepartureScreens",
             "variables": {"station": this.stationID},
@@ -54,7 +50,7 @@ class NJTRFetcher {
             data: data
         };
 
-        let that = this;
+        let self = this;
         axios(config).then(function (response) {
             let schedules = []
 
@@ -67,9 +63,9 @@ class NJTRFetcher {
                     trainNum: el.trainID,
                     status: el.status
                 })
-                return that.max > 0 && schedules.length >= that.max
+                return self.max > 0 && schedules.length >= self.max
             })
-            that.eventsReceivedCallback(schedules);
+            self.eventsReceivedCallback(schedules);
         }).catch((err) => {
             /* handle HTTP errors */
             console.error(`NJ Transit error querying NJ Transit API for stop id: ${this.stationID}`);
