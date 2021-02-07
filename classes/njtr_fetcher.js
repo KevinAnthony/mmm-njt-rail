@@ -10,7 +10,6 @@ class NJTRFetcher {
         this.token = 'fSJeKkBzVHpWdFEkcWoiOiJzc2FwIiwiZyFuem8mOWxRWXg3IjoicmVzdSJ7'
         this.hash = '988af61d40d8f98ad68e0793b81a9a04bb96efa8407004a0ef85ec477cf00025'
 
-        this.unicodeRegex = '&#([0-9]+)'
     }
 
     onReceive(callback) {
@@ -29,10 +28,12 @@ class NJTRFetcher {
     }
 
     fixUnicode(inText) {
-        let match = inText.match(this.unicodeRegex)
-        if (match != null) {
-            return inText.replace(match[0], String.fromCharCode(parseInt(match[1])))
+        let matches = inText.matchAll("&#([0-9]+)")
+
+        for (const match of matches) {
+           inText = inText.replace(match[0], String.fromCharCode(parseInt(match[1])))
         }
+
         return inText
     }
 
