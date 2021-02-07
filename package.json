@@ -17,9 +17,7 @@
   },
   "homepage": "https://github.com/KevinAnthony/mmm-njt-rail#readme",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "cheerio-tableparser": "^1.0.1",
-    "needle": "^2.4.1"
+    "axios": "^0.21.1"
   },
   "devDependencies": {
     "eslint": "^7.5.0"
