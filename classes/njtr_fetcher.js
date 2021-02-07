@@ -9,6 +9,8 @@ class NJTRFetcher {
 
         this.token = 'fSJeKkBzVHpWdFEkcWoiOiJzc2FwIiwiZyFuem8mOWxRWXg3IjoicmVzdSJ7'
         this.hash = '988af61d40d8f98ad68e0793b81a9a04bb96efa8407004a0ef85ec477cf00025'
+
+        this.unicodeRegex = '&#([0-9]+)'
     }
 
     onReceive(callback) {
@@ -26,9 +28,16 @@ class NJTRFetcher {
         this.reloadTimer = null;
     }
 
+    fixUnicode(inText) {
+        let match = inText.match(this.unicodeRegex)
+        if (match != null) {
+            return inText.replace(match[0], String.fromCharCode(parseInt(match[1])))
+        }
+        return inText
+    }
+
     async fetch() {
         this.stop()
-        console.log("NJT_INIT")
         var data = JSON.stringify({
             "operationName": "TrainDepartureScreens",
             "variables": {"station": this.stationID},
@@ -56,12 +65,12 @@ class NJTRFetcher {
 
             response.data.data.getTrainDepartureScreens.items.some(el =>{
                 schedules.push({
-                    time: el.departureDate,
-                    dest: el.destination.replace('&#9992','\\2708'),
-                    track: el.track,
-                    line: el.line,
-                    trainNum: el.trainID,
-                    status: el.status
+                    time: self.fixUnicode(el.departureDate),
+                    dest: self.fixUnicode(el.destination),
+                    track: self.fixUnicode(el.track),
+                    line: self.fixUnicode(el.line),
+                    trainNum: self.fixUnicode(el.trainID),
+                    status: self.fixUnicode(el.status)
                 })
                 return self.max > 0 && schedules.length >= self.max
             })
@@ -75,5 +84,6 @@ class NJTRFetcher {
         );
     }
 }
+
 
 module.exports = NJTRFetcher;
