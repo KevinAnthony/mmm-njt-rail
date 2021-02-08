@@ -71,7 +71,7 @@ class NJTRFetcher {
                     track: self.fixUnicode(el.track),
                     line: self.fixUnicode(el.line),
                     trainNum: self.fixUnicode(el.trainID),
-                    status: self.fixUnicode(el.status).toUpperCase()
+                    status: self.fixUnicode(el.status)
                 })
                 return self.max > 0 && schedules.length >= self.max
             })
